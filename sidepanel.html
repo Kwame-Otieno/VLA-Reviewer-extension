@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VLA Reviewer</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+
+  <!-- Persistent Header -->
+  <div class="header-bar">
+    <h3 class="brand">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#5b7ae8" viewBox="0 0 14 14" aria-hidden="true">
+        <path d="M11.667 4.667h-1.75V2.333H1.75A1.17 1.17 0 0 0 .583 3.5v6.417H1.75c0 .968.782 1.75 1.75 1.75s1.75-.782 1.75-1.75h3.5c0 .968.782 1.75 1.75 1.75.969 0 1.75-.782 1.75-1.75h1.167V7zM3.5 10.792a.874.874 0 1 1 0-1.75.874.874 0 1 1 0 1.75m7.875-5.25L12.518 7H9.918V5.542zm-.875 5.25a.874.874 0 1 1 0-1.75.874.874 0 1 1 0 1.75"></path>
+      </svg>
+      Data Annotation
+    </h3>
+    <div class="header-actions">
+      <!-- 1. AI Chat -->
+      <button type="button" class="icon-btn" id="chat-toggle" aria-label="AI Chat" title="AI Chat">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          <path d="M12 6.5l1.1 2.4 2.4 1.1-2.4 1.1-1.1 2.4-1.1-2.4-2.4-1.1 2.4-1.1z" fill="currentColor" stroke="none"></path>
+        </svg>
+      </button>
+      <!-- 2. Speed Calculator -->
+      <button type="button" class="icon-btn" id="calc-toggle" aria-label="Speed Calculator" title="Speed Calculator">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+          <line x1="8" y1="6" x2="16" y2="6"></line>
+          <line x1="16" y1="14" x2="16" y2="18"></line>
+          <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"></path>
+        </svg>
+      </button>
+      <!-- 2b. Screenshot (snip tool on the annotation page) -->
+      <button type="button" class="icon-btn" id="screenshot-btn" aria-label="Screenshot" title="Screenshot (Alt+Shift+S)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+      </button>
+      <!-- 3. Bookmarks -->
+      <button type="button" class="icon-btn" id="bookmarks-toggle" aria-label="Bookmarks" title="Bookmarks">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </button>
+      <!-- 3b. Statistics -->
+      <button type="button" class="icon-btn" id="stats-toggle" aria-label="Statistics" title="Statistics">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+      </button>
+      <!-- 4. Light / Dark mode (sun in light mode, moon in dark mode) -->
+      <button type="button" class="icon-btn" id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="3.25" stroke="currentColor" stroke-width="1.5"></circle><path d="M8 1.75v1.25M8 13v1.25M1.75 8H3M13 8h1.25M3.4 3.4l.9.9M11.7 11.7l.9.9M3.4 12.6l.9-.9M11.7 4.3l.9-.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <!-- 5. Settings -->
+      <button type="button" class="icon-btn" id="settings-toggle" aria-label="Settings" title="Settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SETTINGS VIEW (Hidden by default)          -->
+  <!-- ========================================== -->
+  <div id="settings-view" hidden>
+    <div class="card" style="border: 1px solid var(--border-color);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="margin: 0; color: var(--text-main); font-size: 16px;">⚙️ Settings</h3>
+        <button type="button" id="close-settings-btn" class="icon-btn" style="padding: 4px;" aria-label="Close settings">✕</button>
+      </div>
+
+      <label for="api-key">Google AI Studio API key</label>
+      <input type="password" id="api-key" autocomplete="off" placeholder="Paste API key (AIzaSy…) REQUIRED for Gemini">
+
+      <label for="groq-api-key" class="spaced">Groq API key</label>
+      <input type="password" id="groq-api-key" autocomplete="off" placeholder="Paste Groq API key (gsk_...) REQUIRED for Groq">
+
+      <label for="api-key-2" class="spaced">Google AI Studio API key — backup (optional)</label>
+      <input type="password" id="api-key-2" autocomplete="off" placeholder="Second API key — used automatically when the first hits its limit">
+
+      <label for="groq-api-key-2" class="spaced">Groq API key — backup (optional)</label>
+      <input type="password" id="groq-api-key-2" autocomplete="off" placeholder="Second Groq key — used automatically when the first hits its limit">
+
+      <label for="model-select" class="spaced">Review / Audit Model</label>
+      <select id="model-select"></select>
+      <input type="text" id="model-input" autocomplete="off" spellcheck="false" placeholder="Custom review model ID" hidden>
+
+      <label for="chat-model-select" class="spaced">AI Chat Model</label>
+      <select id="chat-model-select"></select>
+      <input type="text" id="chat-model-input" autocomplete="off" spellcheck="false" placeholder="Custom chat model ID" hidden>
+      <p class="hint-text" style="margin-bottom: 8px;">Pick a separate model to use just for the 💬 AI Chat feature.</p>
+
+      <label for="vision-model-select" class="spaced">Image Analysis Model</label>
+      <select id="vision-model-select"></select>
+      <input type="text" id="vision-model-input" autocomplete="off" spellcheck="false" placeholder="Custom image model ID" hidden>
+      <p class="hint-text" style="margin-bottom: 8px;">Used by the 📷 camera analysis. A stronger model reads lane markings and signs more accurately. Saved automatically; if it is busy, the extension temporarily uses Flash-Lite.</p>
+
+      <label class="checkbox-row" style="margin-top: 14px;">
+        <input type="checkbox" id="auto-fetch">
+        <span>Auto-fetch fields when I switch clip / tab</span>
+      </label>
+
+      <label class="checkbox-row" style="margin-top: 10px;">
+        <input type="checkbox" id="auto-audit">
+        <span>Auto-check compliance on clip load (requires API key)</span>
+      </label>
+
+      <label class="checkbox-row" style="margin-top: 10px;">
+        <input type="checkbox" id="show-badge">
+        <span>Show violations badge on extension icon (requires Auto-fetch)</span>
+      </label>
+
+      <label class="checkbox-row" style="margin-top: 10px;">
+        <input type="checkbox" id="warn-page-change">
+        <span>Warn when switching to a different page/clip</span>
+      </label>
+
+      <!-- Google Sheet shortcut (instant-save, no Save button needed) -->
+      <div style="border-top: 1px solid var(--border-main); margin-top: 16px; padding-top: 12px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-main);">📊 Google Sheet</h3>
+        <label for="st-sheet-url">Sheet URL</label>
+        <input type="text" id="st-sheet-url" placeholder="https://docs.google.com/spreadsheets/d/…" autocomplete="off" spellcheck="false">
+        <p class="hint-text">Saved automatically. The "Google Sheets" button jumps to this sheet: it reuses the tab if it is already open, otherwise it opens a new one.</p>
+      </div>
+
+      <!-- 🧠 Prompts (instant-save; overrides live in chrome.storage under "vla_prompt_overrides") -->
+      <div style="border-top: 1px solid var(--border-main); margin-top: 16px; padding-top: 12px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-main);">🧠 Prompts</h3>
+        <label for="prompt-block-select">Prompt block</label>
+        <select id="prompt-block-select"></select>
+        <label for="prompt-block-text" class="spaced">Block text (saved as you type)</label>
+        <textarea id="prompt-block-text" spellcheck="false" autocomplete="off" style="min-height: 180px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11px; line-height: 1.5; white-space: pre; overflow-x: auto;"></textarea>
+        <p class="hint-text" id="prompt-block-status" style="margin-top: 4px;"></p>
+        <div style="display: flex; gap: 8px; margin-top: 8px;">
+          <button type="button" class="action-btn" id="prompt-reset-block-btn" style="flex: 1;">Restore this block</button>
+          <button type="button" class="action-btn" id="prompt-reset-all-btn" style="flex: 1;">Restore all defaults</button>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 8px;">
+          <button type="button" class="action-btn" id="prompt-import-btn" style="flex: 1;">📥 Import</button>
+          <button type="button" class="action-btn" id="prompt-export-btn" style="flex: 1;">📤 Export</button>
+        </div>
+        <input type="file" id="prompt-import-file" accept=".json,.txt,application/json,text/plain" hidden>
+        <p class="hint-text" style="margin-top: 8px;">Edits here override the built-in rule blocks for every AI feature (audit, chat, rephrase, validation, 📷 auto-description). "●" marks an edited block. Restore this block puts back the original text. Pick "📋 All blocks" to view and edit everything in one scrollable text area — keep the ===== [KEY] headers intact; each section saves on its own.</p>
+      </div>
+
+      <!-- Camera zoom (instant-save) -->
+      <div style="border-top: 1px solid var(--border-main); margin-top: 16px; padding-top: 12px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-main);">🔍 Camera overview</h3>
+        <label class="checkbox-row" style="margin-top: 2px;">
+          <input type="checkbox" id="st-zoom-enabled" checked>
+          <span>Double-click a camera image to open it large</span>
+        </label>
+        <p class="hint-text">On the annotation page, double-click Left / Front / Right / Rear left / Rear right to open it as a large overview on the same tab. Left-click zooms in, right-click zooms out, drag moves it, ← → step through the clip while the picture follows live; ‹ › or ↑ ↓ switch camera; the clip's frame counter is mirrored at the top; ✕, Esc or a click outside closes it. Applies right away.</p>
+      </div>
+
+      <!-- Speed Calculator settings — shared with the calculator view (instant-save, no Save button needed) -->
+      <div style="border-top: 1px solid var(--border-main); margin-top: 16px; padding-top: 12px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-main);">🧮 Speed Calculator</h3>
+
+        <!-- Autocheck (from the standalone Speed Calculator): automatic speed check on clip load -->
+        <label class="checkbox-row" style="margin-top: 2px;">
+          <input type="checkbox" id="st-ac-enabled" checked>
+          <span>Run autocheck when a clip loads</span>
+        </label>
+
+        <label for="st-ac-frames" class="spaced">Default frames ahead of the action point</label>
+        <select id="st-ac-frames">
+          <option value="10">10 frames (1 s)</option>
+          <option value="20">20 frames (2 s)</option>
+          <option value="30">30 frames (3 s)</option>
+          <option value="40">40 frames (4 s)</option>
+          <option value="50" selected>50 frames (5 s)</option>
+        </select>
+        <p class="hint-text">With autocheck on, the calculator reads the speed at the action point and N frames later as soon as the clip has an action point, keeps rechecking while a slow clip is still loading, and then keeps End Speed, Speed Difference and the recommendation updating in realtime from the action point. While it is on, the Fetch buttons are hidden: pick the frames ahead in the calculator and the speeds are fetched automatically. It only runs while the calculator view is open.</p>
+
+        <label class="checkbox-row" style="margin-top: 10px;">
+          <input type="checkbox" id="st-ac-review-off">
+          <span>Disable speed check in review mode</span>
+        </label>
+        <p class="hint-text">On /review/ pages (and read-only clips) no speed is measured: the compliance check runs without the speed measurement, the autocheck stays idle, and the playhead is never moved. Saved automatically and shared with the options page.</p>
+
+        <label for="st-thr-near-stop">Near-stop speed (m/s)</label>
+        <input type="number" class="thr-input" id="st-thr-near-stop" data-thr="nearStop" step="0.05" min="0" autocomplete="off">
+        <p class="hint-text">At or below this speed the car counts as "stopped" (default 0.3).</p>
+
+        <label for="st-thr-stop-drop" class="spaced">Stop drop (m/s)</label>
+        <input type="number" class="thr-input" id="st-thr-stop-drop" data-thr="stopDrop" step="0.05" min="0" autocomplete="off">
+        <p class="hint-text">Stopped → stopped: a drop of at least this much means "Stop", otherwise "Remain stopped" (default 0.1).</p>
+
+        <label for="st-thr-maintain-band" class="spaced">Maintain band (m/s)</label>
+        <input type="number" class="thr-input" id="st-thr-maintain-band" data-thr="maintainBand" step="0.1" min="0" autocomplete="off">
+        <p class="hint-text">A speed change smaller than this counts as "Maintain speed" (default 0.8).</p>
+
+        <button type="button" class="action-btn" id="st-thr-reset-btn" style="margin-top: 12px;">Restore defaults</button>
+        <p class="hint-text">Changes here apply immediately and drive the calculator's recommendations.</p>
+      </div>
+
+      <div id="settings-notice" aria-live="polite"></div>
+
+      <button type="button" id="save-key-btn" class="mb" style="margin-top: 20px;">Save settings</button>
+      <p class="hint-text" style="margin-top: 10px;">Shortcut: Ctrl+Shift+K (Cmd+Shift+K on Mac) fetches and checks the current page. Change it at chrome://extensions/shortcuts.</p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- BOOKMARKS VIEW (Hidden by default)         -->
+  <!-- ========================================== -->
+  <div id="bookmarks-view" hidden>
+    <div class="card">
+      <div class="view-head">
+        <h3>🔖 Bookmarks</h3>
+        <button type="button" id="close-bookmarks-btn" class="icon-btn" style="padding: 4px;" aria-label="Close bookmarks">✕</button>
+      </div>
+
+      <div class="seg" id="bm-filter" role="group" aria-label="Filter bookmarks">
+        <button type="button" class="seg-btn active" data-filter="all">All</button>
+        <button type="button" class="seg-btn" data-filter="description">Description</button>
+        <button type="button" class="seg-btn" data-filter="causal">Causal</button>
+        <button type="button" class="seg-btn" data-filter="chat">Chat</button>
+      </div>
+
+      <input type="text" id="bm-search" autocomplete="off" spellcheck="false" placeholder="Search bookmarks…" aria-label="Search bookmarks">
+      <select id="bm-maneuver-filter" aria-label="Filter by maneuver" style="margin-bottom: 10px;">
+        <option value="all">All Maneuvers</option>
+      </select>
+
+      <div id="bm-list" aria-live="polite"></div>
+
+      <!-- Manually add a bookmark (type or paste) -->
+      <div class="bm-add-box">
+        <label for="bm-add-text">Add a bookmark manually</label>
+        <div style="display: flex; gap: 6px; align-items: stretch; margin-top: 2px;">
+          <textarea id="bm-add-text" placeholder="Type or paste a bookmark…" spellcheck="false" style="flex: 1; height: 36px; min-height: 36px; resize: none; margin-top: 0; padding: 8px;"></textarea>
+          <button type="button" id="bm-add-btn" class="apply-btn" style="width: auto; padding: 4px 12px; margin: 0; white-space: nowrap;">➕ Add</button>
+        </div>
+        <p class="hint-text" style="margin-top: 6px;">Press Enter to add (Shift+Enter for a new line). The active tab above sets the type; the maneuver filter sets its maneuver.</p>
+      </div>
+      <p class="hint-text">Bookmarks are saved in this browser and shared across every clip. Tap ☆ on a Description, a Causal Action or an AI reply to save it, or add one manually above; tap ★ again to remove it.</p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- STATISTICS VIEW (Hidden by default)       -->
+  <!-- ========================================== -->
+  <div id="stats-view" hidden>
+    <div class="card">
+      <div class="view-head">
+        <h3>📊 Statistics</h3>
+        <button type="button" id="close-stats-btn" class="icon-btn" style="padding: 4px;" aria-label="Close statistics">✕</button>
+      </div>
+      <div class="seg" id="stats-range" role="group" aria-label="Statistics time range">
+        <button type="button" class="seg-btn" data-range="today">Today</button>
+        <button type="button" class="seg-btn active" data-range="7d">7 days</button>
+        <button type="button" class="seg-btn" data-range="30d">30 days</button>
+        <button type="button" class="seg-btn" data-range="all">All time</button>
+      </div>
+      <select id="stats-cat-select" aria-label="Statistics category" style="margin-bottom: 10px;">
+        <option value="all" selected>All categories</option>
+        <option value="desc">Description</option>
+        <option value="causal">Causal Action</option>
+        <option value="man">Maneuver tag</option>
+        <option value="spd">Speed change tag</option>
+        <option value="ctx">Context tags</option>
+        <option value="gram">Grammar errors</option>
+      </select>
+      <div id="stats-content" aria-live="polite"></div>
+      <button type="button" class="action-btn" id="stats-reset-btn" style="margin-top: 14px;">Reset statistics</button>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- AI CHAT VIEW (Hidden by default)           -->
+  <!-- ========================================== -->
+  <div id="chat-view" hidden>
+    <div class="card" style="display: flex; flex-direction: column; height: calc(100vh - 65px); padding: 0; margin-bottom: 0;">
+      <div style="padding: 12px; border-bottom: 1px solid var(--border-main); display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); flex-shrink: 0; border-radius: 6px 6px 0 0;">
+        <h3 style="margin: 0; color: var(--text-main); font-size: 14px;">💬 VLA Assistant</h3>
+        <button type="button" id="close-chat-btn" class="icon-btn" style="padding: 4px;" aria-label="Close chat">✕</button>
+      </div>
+
+      <div id="chat-history" style="flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; background: var(--bg-body);">
+        <div class="chat-message model">Hello! I'm here to help with VLA guidelines, edge cases, and phrasing. What's on your mind?</div>
+      </div>
+
+      <!-- AI Chat Suggestion Bubbles Container -->
+      <div id="chat-suggestions" class="chat-suggestions" hidden></div>
+
+      <!-- Sample action buttons: one-tap AI tools, always visible above the input bar -->
+      <div id="chat-samples">
+        <button type="button" class="chat-suggestion-bubble" id="sample-speed-btn">🧮 Check speed change</button>
+        <button type="button" class="chat-suggestion-bubble" id="sample-describe-btn">📷 Describe ego's environment</button>
+      </div>
+
+      <!-- Image Preview Area (Hidden by default) -->
+      <div id="chat-image-preview-container" style="padding: 8px 12px; display: none; align-items: center; gap: 8px; background: var(--bg-card); border-top: 1px solid var(--border-main); flex-shrink: 0;">
+        <img id="chat-image-preview" src="" alt="Preview" style="height: 36px; width: 36px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-main);">
+        <span id="chat-image-name" style="font-size: 11px; color: var(--text-muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
+        <button type="button" id="remove-chat-image-btn" class="icon-btn" style="padding: 2px; font-size: 12px;" title="Remove image">✕</button>
+      </div>
+
+      <div style="padding: 12px; border-top: 1px solid var(--border-main); background: var(--bg-card); flex-shrink: 0; display: flex; gap: 8px; align-items: center; border-radius: 0 0 6px 6px;">
+        <button type="button" id="chat-upload-btn" class="icon-btn" style="width: auto; padding: 6px 8px; font-size: 16px; border: 1px solid var(--border-input); border-radius: 4px; background: var(--bg-secondary-btn); cursor: pointer;" title="Screenshot the camera views" aria-label="Screenshot the camera views">📷</button>
+        <textarea id="chat-input" placeholder="Ask about guidelines..." style="flex: 1; height: 36px; min-height: 36px; margin: 0; padding: 8px; resize: none; font-size: 12px; box-sizing: border-box;"></textarea>
+        <button type="button" id="chat-send-btn" style="width: auto; height: 36px; padding: 0 16px; flex-shrink: 0;">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- CALCULATOR VIEW (Hidden by default)        -->
+  <!-- ========================================== -->
+  <div id="calc-view" hidden>
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="margin: 0; color: var(--text-main); font-size: 16px;">🧮 Speed Calculator</h3>
+        <button type="button" id="close-calc-btn" class="icon-btn" style="padding: 4px;" aria-label="Close calculator">✕</button>
+      </div>
+
+      <p class="hint-text" id="calc-hint" style="margin-bottom: 12px;">Calculate speed changes over 50 frames (5 seconds).</p>
+
+      <!-- Autocheck status banner (loading / no action point / action point changed / no telemetry) -->
+      <div id="autocheck-status" class="ac-status" hidden aria-live="polite"></div>
+
+      <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 14px;">
+        <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Frames ahead</span>
+        <div style="display: flex; gap: 4px; margin-left: auto;">
+          <button type="button" class="window-btn" data-window="10">10</button>
+          <button type="button" class="window-btn" data-window="20">20</button>
+          <button type="button" class="window-btn" data-window="30">30</button>
+          <button type="button" class="window-btn" data-window="40">40</button>
+          <button type="button" class="window-btn" data-window="50">50</button>
+        </div>
+      </div>
+
+      <button type="button" id="calc-fetch-both-btn" style="margin-bottom: 12px;">Fetch Both Speeds</button>
+
+      <label for="calc-start">Start Speed (m/s)</label>
+      <div style="display: flex; gap: 6px; align-items: stretch; margin-top: 2px;">
+        <input type="number" id="calc-start" placeholder="e.g. 12.5" step="0.1" autocomplete="off" style="flex: 1; margin-top: 0;">
+        <button type="button" class="action-btn calc-fetch-speed-btn" data-target="calc-start" style="font-size: 11px; padding: 4px 10px; white-space: nowrap; margin-top: 0;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> <span class="btn-label">Fetch</span></button>
+      </div>
+
+      <label for="calc-end" class="spaced">End Speed (m/s)</label>
+      <div style="display: flex; gap: 6px; align-items: stretch; margin-top: 2px;">
+        <input type="number" id="calc-end" placeholder="e.g. 10.0" step="0.1" autocomplete="off" style="flex: 1; margin-top: 0;">
+        <button type="button" class="action-btn calc-fetch-speed-btn" data-target="calc-end" style="font-size: 11px; padding: 4px 10px; white-space: nowrap; margin-top: 0;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> <span class="btn-label">Fetch</span></button>
+      </div>
+      <!-- Autocheck: where the playhead is relative to the action point -->
+      <div id="calc-end-frames" class="frames-note" hidden aria-live="polite"></div>
+      <div id="calc-telemetry" class="telemetry-box" hidden aria-live="polite"></div>
+
+      <div style="display: flex; align-items: center; margin: 16px 0;">
+        <hr style="flex:1; border: none; border-top: 1px solid var(--border-main);">
+        <span style="padding: 0 10px; font-size: 11px; font-weight: bold; color: var(--text-muted);">OR</span>
+        <hr style="flex:1; border: none; border-top: 1px solid var(--border-main);">
+      </div>
+
+      <label for="calc-diff">Speed Difference (Δ)</label>
+      <input type="number" id="calc-diff" placeholder="e.g. -2.5" step="0.1" autocomplete="off" style="font-weight: bold;">
+
+      <div style="margin-top: 24px; padding: 16px; border-radius: 6px; background: var(--bg-suggestion); border: 1px solid var(--border-main); text-align: center;">
+        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px;">Recommended Action</div>
+        <div id="calc-suggestion" style="font-size: 18px; font-weight: bold; min-height: 24px;">—</div>
+      </div>
+
+      <div id="calc-choice-status" style="margin-top: 10px; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-main); font-size: 12px; color: var(--text-muted); display: none;"></div>
+
+      <button type="button" id="calc-copy-url-btn"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> <span class="btn-label">Copy Clip URL</span></button>
+      <button type="button" id="calc-apply-page-btn" style="display: none; margin-top: 8px;">Apply to Page</button>
+      <!-- Autocheck result popup -->
+      <div id="calc-toast" class="toast" hidden role="status" aria-live="polite"></div>
+      <p class="hint-text" style="margin-top: 10px;">"Fetch" seeks the clip automatically: start speed is read at the action point, end speed N frames later (set N with the buttons above). With both speeds filled, the recommendation picks from 6 options: Stop (end speed ≈ 0), Decelerate, Maintain speed, Accelerate, Remain stopped (stopped → stopped) and Resume motion (stopped → moving). "Apply to Page" opens the speed-change dropdown on the annotation page and picks the recommended option. You can tune the rules behind the recommendation (near-stop speed, maintain band…) in Settings (⚙ icon).</p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MAIN DATA VIEW                             -->
+  <!-- ========================================== -->
+  <div id="main-view">
+    <div id="access-card" class="card warning" hidden>
+      <p id="access-text" class="access-text"></p>
+      <button type="button" id="access-btn">Allow on this site</button>
+    </div>
+
+    <div class="card">
+      <button type="button" id="fetch-btn" class="mb">🔄 Fetch Data from Page</button>
+
+      <div class="field-group">
+        <div class="label-row">
+          <label>Action Point</label>
+          <span class="counter" id="ap-cursor"></span>
+        </div>
+        <div style="display: flex; gap: 6px; align-items: stretch; margin-top: 2px;">
+          <div id="ap-readout" class="ap-readout" aria-live="polite">—</div>
+        </div>
+        <div id="ap-note" class="frames-note fn-muted" hidden></div>
+      </div>
+
+      <div class="field-group">
+        <div class="label-row">
+          <label for="box1-input">Description <span class="required-star">*</span></label>
+          <span class="label-tools"><span class="counter" id="box1-count"></span><button type="button" class="bm-btn bm-mini" id="bm-box1-input">☆</button></span>
+        </div>
+        <textarea id="box1-input" placeholder="e.g., Ego is in the center lane of a two-lane highway."></textarea>
+        <div id="box1-lint"></div>
+      </div>
+
+      <div class="field-group">
+        <div class="label-row">
+          <label for="box2-input">Causal Action <span class="required-star">*</span></label>
+          <span class="label-tools"><span class="counter" id="box2-count"></span><button type="button" class="bm-btn bm-mini" id="bm-box2-input">☆</button></span>
+        </div>
+        <textarea id="box2-input" placeholder="e.g., Maintain speed because the vehicle ahead is cutting in..."></textarea>
+        <div id="box2-lint"></div>
+      </div>
+
+      <div class="field-group">
+        <label for="user-maneuver">Maneuver <span class="required-star">*</span></label>
+        <select id="user-maneuver"></select>
+      </div>
+
+      <div class="field-group">
+        <label for="user-speed">Speed change <span class="required-star">*</span></label>
+        <div style="display: flex; gap: 6px; align-items: stretch;">
+          <select id="user-speed" style="flex: 1; margin-top: 0;"></select>
+          <button type="button" id="speed-calc-btn" class="action-btn" style="font-size: 11px; padding: 4px 10px; white-space: nowrap; margin-top: 0; display: inline-flex; align-items: center; gap: 5px;" title="Measure the speed from the clip (action point → N frames ahead, same method as the Speed Calculator) and fill this dropdown with the matching option"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path></svg><span>Calculate</span></button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label id="context-label">Context</label>
+        <div class="context-grid" id="context-container" role="group" aria-labelledby="context-label"></div>
+      </div>
+
+      <div class="action-row">
+        <button type="button" id="audit-btn">Check Compliance</button>
+        <button type="button" id="refresh-btn" class="refresh-btn" aria-label="Refresh data from page" title="Refresh data from page">↻</button>
+      </div>
+    </div>
+
+    <div id="clip-audit-history" class="card" hidden></div>
+    <div id="output" aria-live="polite"></div>
+    <div id="notice" aria-live="polite"></div>
+
+    <div class="footer-actions">
+      <button type="button" id="copy-url-btn">🔗 Copy Clip URL</button>
+      <div style="display: flex; gap: 8px; margin-top: 10px;">
+        <button type="button" id="return-tab-btn" style="flex: 1; background-color: var(--bg-pill); color: var(--text-main); border: 1px solid var(--border-input); transition: opacity 0.2s;">⬅️ Return to Clip</button>
+        <button type="button" id="open-sheet-btn" style="flex: 1; background-color: #10b981; color: white; border: none; transition: opacity 0.2s;">📊 Google Sheets</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="prompts.js"></script>
+  <!-- Ensures the JS is properly linked and matched to fix the ERR_FILE_NOT_FOUND error -->
+  <script src="sidepanel.js"></script>
+</body>
+</html>

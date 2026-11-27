@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VLA Reviewer Settings</title>
+  <link rel="stylesheet" href="sidepanel.css">
+  <style>
+    body { max-width: 550px; margin: 50px auto; font-size: 14px; }
+    .card { padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h2 { margin: 0 0 20px 0; font-size: 18px; color: var(--text-main); }
+    input[type="text"], input[type="password"] { font-size: 13px; padding: 10px; margin-bottom: 12px; }
+    button { font-size: 14px; padding: 10px; margin-top: 20px; }
+    .checkbox-row { font-size: 13px; margin-top: 14px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>⚙️ VLA Reviewer Settings</h2>
+
+    <div id="notice" aria-live="polite"></div>
+
+    <label for="api-key">Google AI Studio API key</label>
+    <input type="password" id="api-key" autocomplete="off" placeholder="Paste API key (AIzaSy…) REQUIRED for Gemini">
+
+    <label for="groq-api-key">Groq API key</label>
+    <input type="password" id="groq-api-key" autocomplete="off" placeholder="Paste Groq API key (gsk_...) REQUIRED for Groq">
+
+    <label for="api-key-2">Google AI Studio API key — backup (optional)</label>
+    <input type="password" id="api-key-2" autocomplete="off" placeholder="Second API key — used automatically when the first hits its limit">
+
+    <label for="groq-api-key-2">Groq API key — backup (optional)</label>
+    <input type="password" id="groq-api-key-2" autocomplete="off" placeholder="Second Groq key — used automatically when the first hits its limit">
+
+    <label for="model-select">Model</label>
+    <select id="model-select"></select>
+    <input type="text" id="model-input" autocomplete="off" spellcheck="false" placeholder="Custom model ID, e.g. gemini-3.8-flash" hidden>
+    <p class="hint-text">Only models with a free tier are listed. Free-tier requests may be used by Google/Groq to improve its products, and limits differ per model. If you hit a rate limit, switch to another model.</p>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="auto-fetch">
+      <span>Auto-fetch fields when I switch clip / tab</span>
+    </label>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="auto-audit">
+      <span>Auto-check compliance on clip load (requires API key)</span>
+    </label>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="show-badge">
+      <span>Show violations badge on extension icon (requires Auto-fetch)</span>
+    </label>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="warn-page-change">
+      <span>Warn when switching to a different page/clip</span>
+    </label>
+
+    <!-- Google Sheet shortcut — shared with the side panel (instant-save) -->
+    <div style="border-top: 1px solid var(--border-main); margin-top: 24px; padding-top: 16px;">
+      <h3 style="margin: 0 0 12px 0; font-size: 15px; color: var(--text-main);">📊 Google Sheet</h3>
+      <label for="sheet-url">Sheet URL</label>
+      <input type="text" id="sheet-url" placeholder="https://docs.google.com/spreadsheets/d/…" autocomplete="off" spellcheck="false">
+      <p class="hint-text">Saved automatically. The "Google Sheets" button in the side panel jumps to this sheet: it reuses the tab if it is already open, otherwise it opens a new one.</p>
+    </div>
+
+    <!-- Camera zoom — saved instantly, shared with the side panel -->
+    <div style="border-top: 1px solid var(--border-main); margin-top: 24px; padding-top: 16px;">
+      <h3 style="margin: 0 0 12px 0; font-size: 15px; color: var(--text-main);">🔍 Camera overview</h3>
+      <label class="checkbox-row" style="margin-top: 0;">
+        <input type="checkbox" id="zoom-enabled" checked>
+        <span>Double-click a camera image to open it large</span>
+      </label>
+      <p class="hint-text">Double-click Left / Front / Right / Rear left / Rear right on the annotation page to open it as a large overview on the same tab (left-click zooms in, right-click zooms out, drag moves it; ← → step through the clip while staying zoomed and the picture follows live; ‹ › or ↑ ↓ switch camera; the frame counter is mirrored at the top; ✕, Esc or a click outside closes it). Saved automatically.</p>
+    </div>
+
+    <!-- Speed Calculator settings — shared with the calculator view in the side panel -->
+    <div style="border-top: 1px solid var(--border-main); margin-top: 24px; padding-top: 16px;">
+      <h3 style="margin: 0 0 12px 0; font-size: 15px; color: var(--text-main);">🧮 Speed Calculator</h3>
+
+      <!-- Autocheck (from the standalone Speed Calculator): automatic speed check on clip load -->
+      <label class="checkbox-row" style="margin-top: 0;">
+        <input type="checkbox" id="ac-enabled" checked>
+        <span>Run autocheck when a clip loads</span>
+      </label>
+
+      <label for="ac-frames" class="spaced">Default frames ahead of the action point</label>
+      <select id="ac-frames">
+        <option value="10">10 frames (1 s)</option>
+        <option value="20">20 frames (2 s)</option>
+        <option value="30">30 frames (3 s)</option>
+        <option value="40">40 frames (4 s)</option>
+        <option value="50" selected>50 frames (5 s)</option>
+      </select>
+      <p class="hint-text">With autocheck on, the calculator in the side panel reads the speed at the action point and N frames later as soon as the clip has an action point, then keeps End Speed, Speed Difference and the recommendation updating in realtime. It only runs while the calculator view is open. Saved automatically and shared with the Settings view in the side panel.</p>
+
+      <label class="checkbox-row" style="margin-top: 10px;">
+        <input type="checkbox" id="ac-review-off">
+        <span>Disable speed check in review mode</span>
+      </label>
+      <p class="hint-text">On /review/ pages (and read-only clips) no speed is measured: the compliance check runs without the speed measurement, the calculator's autocheck stays idle, and the playhead is never moved. Compliance checks and everything else work as usual. Saved automatically.</p>
+
+      <label for="thr-near-stop">Near-stop speed (m/s)</label>
+      <input type="number" class="thr-input" id="thr-near-stop" data-thr="nearStop" step="0.05" min="0" autocomplete="off">
+      <p class="hint-text">At or below this speed the car counts as "stopped" (default 0.3).</p>
+
+      <label for="thr-stop-drop" class="spaced">Stop drop (m/s)</label>
+      <input type="number" class="thr-input" id="thr-stop-drop" data-thr="stopDrop" step="0.05" min="0" autocomplete="off">
+      <p class="hint-text">Stopped → stopped: a drop of at least this much means "Stop", otherwise "Remain stopped" (default 0.1).</p>
+
+      <label for="thr-maintain-band" class="spaced">Maintain band (m/s)</label>
+      <input type="number" class="thr-input" id="thr-maintain-band" data-thr="maintainBand" step="0.1" min="0" autocomplete="off">
+      <p class="hint-text">A speed change smaller than this counts as "Maintain speed" (default 0.8).</p>
+
+      <button type="button" class="action-btn" id="thr-reset-btn" style="margin-top: 12px;">Restore defaults</button>
+      <p class="hint-text">Changes here apply immediately (no Save needed) and sync live with the calculator view in the side panel.</p>
+    </div>
+
+    <button type="button" id="save-key-btn">Save & Verify</button>
+    <p class="hint-text">Shortcut: Ctrl+Shift+K (Cmd+Shift+K on Mac) fetches and checks the current page. Change it at chrome://extensions/shortcuts.</p>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
