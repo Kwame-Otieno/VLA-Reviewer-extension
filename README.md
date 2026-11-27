@@ -1,8 +1,24 @@
 # VLA Reviewer
 
-A Chrome (Manifest V3) side-panel extension that helps you check VLA annotation text against the required standards before you submit. It combines instant local rule checks, an AI audit and chat assistant (Google Gemini or Groq), a speed calculator driven by the clip's own telemetry, and personal statistics.
+A Chrome (Manifest V3) side-panel extension for the Ondana data-annotation tool that helps you check VLA annotation text against the required standards before you submit. It combines instant local rule checks, an AI audit and chat assistant (Google Gemini or Groq), a speed calculator driven by the clip's own telemetry, and personal statistics.
 
 > **Disclaimer:** Independent tool, not affiliated with or endorsed by the annotation platform it works with. Use it in line with that platform's rules.
+
+> **Site-specific:** this extension only works on the annotation tool at `https://data-annotation-app.applied.ondana.ai` (the `/annotate/<id>` and `/review/<id>` clip pages). It reads and fills that site's page fields and uses its clip API, so it does nothing useful on any other website, and it needs an account on that platform. The first time you use it, Chrome asks you to allow access to that site.
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/results.png" width="210" alt="Compliance check results">
+  <img src="docs/assistant.png" width="210" alt="AI chat assistant">
+  <img src="docs/speed-calculator.png" width="210" alt="Speed Calculator">
+</p>
+<p align="center">
+  <img src="docs/statistics.png" width="210" alt="Statistics">
+  <img src="docs/bookmarks.png" width="210" alt="Bookmarks">
+</p>
+
+*Left to right, top row: compliance check results, AI chat assistant, Speed Calculator. Bottom row: statistics, bookmarks.*
 
 ## Features
 
@@ -83,7 +99,7 @@ The rules the reviewer enforces live in two files. This repo ships **example** v
 
 `prompts.js` and `shared.js` are listed in `.gitignore`, so your real guidelines stay on your machine.
 
-Requires Chrome 116 or newer.
+Requires Chrome 116 or newer, and access to the annotation site above.
 
 ## API keys
 
